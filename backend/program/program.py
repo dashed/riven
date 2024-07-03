@@ -382,11 +382,16 @@ class Program(threading.Thread):
 
             if updated_item and isinstance(existing_item, (Movie, Show)) and updated_item.state == States.Symlinked:
                 logger.success(f"Item has been completed: {updated_item.log_string}")
-                if updated_item in items_to_submit:
-                    items_to_submit.remove(updated_item)
+                # if updated_item in items_to_submit:
+                #     items_to_submit.remove(updated_item)
 
             if updated_item:
                 self.media_items.upsert(updated_item)
+                if updated_item._cycle_number <= 3:
+                    updated_item._cycle_number += 1
+                else:
+                    if updated_item in items_to_submit:
+                        items_to_submit.remove(updated_item)
 
             self._remove_from_running_items(event.item, "program.run")
 

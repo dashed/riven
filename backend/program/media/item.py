@@ -31,6 +31,7 @@ class MediaItem:
     """MediaItem class"""
 
     def __init__(self, item: dict) -> None:
+        self._cycle_number: int = 0
         self.requested_at: Optional[datetime] = item.get("requested_at", datetime.now())
         self.requested_by: Optional[str] = item.get("requested_by", None)
 
