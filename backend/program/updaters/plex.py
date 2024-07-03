@@ -89,8 +89,12 @@ class PlexUpdater:
             items_to_update = [e for e in item.episodes if e.symlinked and e.update_folder != "updated"]
 
         if not items_to_update:
+            logger.log("PLEX", f"No items to update for {item.log_string}")
             yield item
             return
+        
+        items_log_strings = ', '.join([item.log_string for item in items_to_update])
+        logger.log("PLEX", f"Updating {items_log_strings}")
 
         section_name = None
         # any failures are usually because we are updating Plex too fast
@@ -119,6 +123,8 @@ class PlexUpdater:
                     logger.log("PLEX", f"Updated section {section_name} for episodes {updated_episodes_log} in {item.log_string}")
             else:
                 logger.log("PLEX", f"Updated section {section_name} for {item.log_string}")
+        else:
+            logger.log("PLEX", f"No items to update for {item.log_string}")
 
         yield item
 
@@ -128,6 +134,7 @@ class PlexUpdater:
             update_folder = item.update_folder
             section.update(str(update_folder))
             item.set("update_folder", "updated")
+            logger.log("PLEX", f"Sent update request to Plex for {item.log_string}")
             return True
         return False
 
