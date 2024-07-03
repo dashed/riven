@@ -394,6 +394,10 @@ class Program(threading.Thread):
 
             if items_to_submit:
                 for item_to_submit in items_to_submit:
+                    # Check if item has already been completed before re-adding to the queue
+                    if item_to_submit.state == States.Completed:
+                        logger.debug(f"Item {item_to_submit.log_string} is already completed, not re-adding to the queue.")
+                        continue
                     self.add_to_running(item_to_submit, next_service.__name__)
                     self._submit_job(next_service, item_to_submit)
 
