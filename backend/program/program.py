@@ -387,10 +387,15 @@ class Program(threading.Thread):
 
             if updated_item:
                 self.media_items.upsert(updated_item)
-                if updated_item._cycle_number <= 3:
+                if (
+                    updated_item.hasattr("_cycle_number")
+                    and updated_item._cycle_number <= 3
+                ):
                     updated_item._cycle_number += 1
                 else:
                     if updated_item in items_to_submit:
+                        updated_item.set("symlinked", True)
+                        updated_item.set("update_folder", "updated")
                         items_to_submit.remove(updated_item)
 
             self._remove_from_running_items(event.item, "program.run")
