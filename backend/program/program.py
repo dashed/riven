@@ -388,7 +388,7 @@ class Program(threading.Thread):
             if updated_item:
                 self.media_items.upsert(updated_item)
                 if (
-                    updated_item.hasattr("_cycle_number")
+                    hasattr(updated_item, "_cycle_number")
                     and updated_item._cycle_number <= 3
                 ):
                     updated_item._cycle_number += 1
